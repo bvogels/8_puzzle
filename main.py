@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 class Grid:
     grid = [[], [], []]
 
+    ###
+    ###### Create a 3x3 puzzle with the numbers 0 to 8
+    #########
+    ######
+    ###
+
     def create_grid(self):
         r, e = 0, 0
         numbers = [n for n in range(0, 9)]
@@ -18,6 +24,33 @@ class Grid:
             r += 1
         print(self.grid)
 
+    ###
+    ###### Check if the puzzle is even solvable.
+    #########
+    ######
+    ###
+
+    def check_validity(self):
+        shifts = 0 # The number of tile shifts
+        flat_grid = sum(self.grid, [])  # flatten the grid -> This is only necessary no make coding less painful
+        flat_grid.remove(0) # Remove the 0 value
+
+        # Traverse the grid to search for misplaced tiles.
+        for e in flat_grid:
+            for n in range(flat_grid.index(e), e):
+                if e > flat_grid[n]:
+                    shifts += 1
+        if shifts % 2 == 0:
+            return True
+        else:
+            return False
+
+    ###
+    ###### Print a grid to display the puzzle in the terminal
+    #########
+    ######
+    ###
+
     def print_ascii_grid(self):
         print("+---" * 3 + "+")
         print("|", self.grid[0][0], "|", self.grid[0][1], "|", self.grid[0][2], "|", )
@@ -26,6 +59,12 @@ class Grid:
         print("+---" * 3 + "+")
         print("|", self.grid[2][0], "|", self.grid[2][1], "|", self.grid[2][2], "|", )
         print("+---" * 3 + "+")
+
+    ###
+    ###### Print the grid in a very rudimentary matplotlib display
+    #########
+    ######
+    ###
 
     def print_matplotlib_grid(self):
         y = 1
@@ -48,4 +87,8 @@ if __name__ == '__main__':
     g = Grid()
     g.create_grid()
     g.print_ascii_grid()
-    g.print_matplotlib_grid()
+    # g.print_matplotlib_grid()
+    if g.check_validity() is True:
+        print("Grid is solvable")
+    else:
+        print("Grid is not solvable")
