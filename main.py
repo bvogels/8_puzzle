@@ -1,9 +1,13 @@
 import random
 import matplotlib.pyplot as plt
 
+from Solution import Solution
+
 
 class Grid:
     grid = [[], [], []]
+
+
 
     ###
     ###### Create a 3x3 puzzle with the numbers 0 to 8
@@ -92,3 +96,5 @@ if __name__ == '__main__':
         print("Grid is solvable")
     else:
         print("Grid is not solvable")
+    s = Solution(g)
+    s.solve_puzzle(g)
