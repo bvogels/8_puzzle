@@ -8,10 +8,10 @@ class Solution:
         self.grid = grid.grid
 
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-    costs = {1: 9, 2: 9, 3: 9, 4: 9, 5: 9, 6: 9, 7: 9, 8: 9}
     count = 0
-    heuristic = 9
-    search_path = {}
+    heuristic = 0
+    search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
+    visited_states = []
 
     def get_tile(self, tile, search_grid):
         null_coords = []
@@ -26,17 +26,26 @@ class Solution:
             return
         if self.grid == self.default_goal_state:
             return True
+        self.heuristic = 10
         intermediate_grid = self.explore()
-        x = self.get_tile(0, self, grid)
-        to_move = self.grid[]
-        # to_move = min(fringe, key=fringe.get)
-        # to_move_coords = self.get_tile(to_move, self.grid)
-        # null_position = self.get_tile(0, self.grid)
-        # self.grid[null_position[0]][null_position[1]] = to_move
-        # self.grid[to_move_coords[0]][to_move_coords[1]] = 0
-        # grid.print_ascii_grid()
-        # self.count += 1
-        # self.solve_puzzle(grid)
+        null_position_intermediate_grid = self.get_tile(0, intermediate_grid)
+        null_position_grid = self.get_tile(0, self.grid)
+        to_move = self.grid[null_position_intermediate_grid[0]][null_position_intermediate_grid[1]]
+        self.grid[null_position_grid[0]][null_position_grid[1]] = to_move
+        self.grid[null_position_intermediate_grid[0]][null_position_intermediate_grid[1]] = 0
+        self.print_ascii_grid()
+        self.count += 1
+        print(self.count)
+        self.solve_puzzle(self.grid)
+
+    def print_ascii_grid(self):
+        print("+---" * 3 + "+")
+        print("|", self.grid[0][0], "|", self.grid[0][1], "|", self.grid[0][2], "|", )
+        print("+---" * 3 + "+")
+        print("|", self.grid[1][0], "|", self.grid[1][1], "|", self.grid[1][2], "|", )
+        print("+---" * 3 + "+")
+        print("|", self.grid[2][0], "|", self.grid[2][1], "|", self.grid[2][2], "|", )
+        print("+---" * 3 + "+")
 
     def count_misplaced_tiles(self, grid):
         misplaced_tiles = 0
@@ -85,24 +94,16 @@ class Solution:
                 return self.calculate_heuristic(to_move_coords, null_position)
 
     def calculate_heuristic(self, to_move_coords, null_position):
+        elective = []
         for coords in to_move_coords:
-            visited_states, elective = [], []
             candidate = copy.deepcopy(self.grid)
             candidate[null_position[0]][null_position[1]] = candidate[coords[0]][coords[1]]
             candidate[coords[0]][coords[1]] = 0
             heuristic = self.count_misplaced_tiles(candidate)
-            if heuristic < self.heuristic:
+            if heuristic < self.heuristic: # worse heuristic is necessary if all other path are used
                 self.heuristic = heuristic
-                elective = copy.deepcopy(candidate)
-            visited_states.append(elective)
-            self.search_path[self.heuristic] = visited_states
-            return elective
-
-
-            # to_move = self.grid[coords[0]][coords[1]]
-            # if self.get_tile(to_move, self.grid) != self.get_tile(to_move, self.default_goal_state):
-            #     target_position = self.get_tile(to_move, self.default_goal_state)
-            #     self.costs[to_move] = abs(null_position[1] - target_position[1]) + abs(
-            #         null_position[0] - target_position[0]) + 1
-            # else:
-            #    self.costs[to_move] = 0
+                if candidate not in self.search_path[self.heuristic]:
+                    elective = copy.deepcopy(candidate)
+        x = self.search_path.get(self.heuristic)
+        x.append(elective)
+        return elective
