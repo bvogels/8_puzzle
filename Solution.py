@@ -8,9 +8,8 @@ class Solution:
 
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
-    heuristic = 0
+    heuristic = 10
     search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
-    visited_states = []
 
     def get_tile(self, tile, search_grid):
         null_coords = []
@@ -27,26 +26,23 @@ class Solution:
     ###
 
     def solve_puzzle(self, grid):
-        # if self.count == 5000:
-        #    return
-        if self.grid == self.default_goal_state:  # This is the stop condition
-            self.g.print_ascii_grid()
-            return True
-        self.heuristic = 10  # This is a dummy heuristic. It is needed to form an upper treshold
-        intermediate_grid = self.explore()  # The calculated next state is obtained.
-        null_position_intermediate_grid = self.get_tile(0,
-                                                        intermediate_grid)  # Null position of the next state is determined.
-        null_position_grid = self.get_tile(0, self.grid)  # Null position of current state is determined
-        to_move = self.grid[null_position_intermediate_grid[0]][
-            null_position_intermediate_grid[1]]  # The number to move is determined
-        self.grid[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
-        self.grid[null_position_intermediate_grid[0]][
-            null_position_intermediate_grid[1]] = 0  # Place null in old position
-        if self.count % 50 == 0:  # Print the grid all 50 recursions
-            self.g.print_ascii_grid()
-        self.count += 1
-        print(self.count)
-        self.solve_puzzle(self.grid)
+        while self.grid != self.default_goal_state:
+            self.heuristic = 10  # This is a dummy heuristic. It is needed to form an upper treshold
+            intermediate_grid = self.explore()  # The calculated next state is obtained.
+            null_position_intermediate_grid = self.get_tile(0,
+                                                            intermediate_grid)  # Null position of the next state is determined.
+            null_position_grid = self.get_tile(0, self.grid)  # Null position of current state is determined
+            to_move = self.grid[null_position_intermediate_grid[0]][
+                null_position_intermediate_grid[1]]  # The number to move is determined
+            self.grid[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
+            self.grid[null_position_intermediate_grid[0]][
+                null_position_intermediate_grid[1]] = 0  # Place null in old position
+            if self.count % 50 == 0:  # Print the grid all 50 recursions
+                self.g.print_ascii_grid()
+            self.count += 1
+            print(self.count)
+        self.g.print_ascii_grid()
+        return True
 
     ###
     ###### Counts the misplaced titles in order to calculate the heuristic.
@@ -59,7 +55,7 @@ class Solution:
         for t, g in zip(grid, self.default_goal_state):
             row = 0
             while row < 3:
-                if t[row] != g[row]:
+                if t[row] != g[row] and t[row] != 0:
                     misplaced_tiles += 1
                 row += 1
         return misplaced_tiles
@@ -132,8 +128,6 @@ class Solution:
         for heuristic in candidates.keys():  # Every heuristic is now checked for which is best
             if len(candidates[heuristic]) != 0:  # Only where a heurisic has been saved
                 for e in candidates[heuristic]:  # Since the states are in a list, this list is iterated through
-                    if e not in self.search_path[
-                        heuristic]:  # If the state has not been in the search path, it is the One!
-                        self.search_path[heuristic].append(
-                            e)  # The state is inserted in the search path to avoid loops. It cannot be used again.
+                    if e not in self.search_path[heuristic]:  # If the state has not been in the search path, it is the One!
+                        self.search_path[heuristic].append(e)  # The state is inserted in the search path to avoid loops. It cannot be used again.
                         return e

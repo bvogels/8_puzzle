@@ -14,6 +14,18 @@ class Grid:
     ######
     ###
 
+    def testgrid1(self):
+        self.grid = [[1, 0, 2], [3, 4, 5], [6, 7, 8]]
+
+    def testgrid2(self):
+        self.grid = [[4, 1, 3], [8, 0, 2], [7, 5, 6]]
+
+    def testgrid3(self):
+        self.grid = [[6, 4, 0], [2, 1, 7], [8, 5, 3]]
+
+    def testgrid4(self):
+        self.grid = [[3, 2, 8], [0, 1, 5], [6, 7, 4]]
+
     def create_grid(self):
         r, e = 0, 0
         numbers = [n for n in range(0, 9)]
