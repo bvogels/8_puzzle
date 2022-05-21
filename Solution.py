@@ -27,7 +27,8 @@ class Solution:
 
     def solve_puzzle(self, grid):
         while self.grid != self.default_goal_state:
-            self.heuristic = 10  # This is a dummy heuristic. It is needed to form an upper treshold
+            if self.count == 0: # calculate initial heuristic
+                self.heuristic = self.count_misplaced_tiles(self.grid)
             intermediate_grid = self.explore()  # The calculated next state is obtained.
             null_position_intermediate_grid = self.get_tile(0,
                                                             intermediate_grid)  # Null position of the next state is determined.
@@ -37,8 +38,8 @@ class Solution:
             self.grid[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
             self.grid[null_position_intermediate_grid[0]][
                 null_position_intermediate_grid[1]] = 0  # Place null in old position
-            if self.count % 50 == 0:  # Print the grid all 50 recursions
-                self.g.print_ascii_grid()
+            #if self.count % 50 == 0:  # Print the grid all 50 recursions
+            self.g.print_ascii_grid()
             self.count += 1
             print(self.count)
         self.g.print_ascii_grid()
@@ -126,8 +127,9 @@ class Solution:
 
     def elect_next_state(self, candidates):
         for heuristic in candidates.keys():  # Every heuristic is now checked for which is best
-            if len(candidates[heuristic]) != 0:  # Only where a heurisic has been saved
+            if len(candidates[heuristic]) != 0 and heuristic <= self.heuristic:  # Only where a heurisic has been saved
                 for e in candidates[heuristic]:  # Since the states are in a list, this list is iterated through
                     if e not in self.search_path[heuristic]:  # If the state has not been in the search path, it is the One!
                         self.search_path[heuristic].append(e)  # The state is inserted in the search path to avoid loops. It cannot be used again.
+                        self.heuristic = heuristic
                         return e
