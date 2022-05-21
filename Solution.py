@@ -3,8 +3,8 @@ import copy
 
 class Solution:
     def __init__(self, grid):
-        self.grid = grid.grid # The actual grid
-        self.g = grid # The grid object. Only used for printing the grid, e. g. having access to the grid functions.
+        self.grid = grid.grid  # The actual grid
+        self.g = grid  # The grid object. Only used for printing the grid, e. g. having access to the grid functions.
 
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
@@ -26,21 +26,23 @@ class Solution:
     ######
     ###
 
-
     def solve_puzzle(self, grid):
         # if self.count == 5000:
         #    return
-        if self.grid == self.default_goal_state: # This is the stop condition
+        if self.grid == self.default_goal_state:  # This is the stop condition
             self.g.print_ascii_grid()
             return True
-        self.heuristic = 10 # This is a dummy heuristic. It is needed to form an upper treshold
-        intermediate_grid = self.explore() # The calculated next state is obtained.
-        null_position_intermediate_grid = self.get_tile(0, intermediate_grid) # Null position of the next state is determined.
-        null_position_grid = self.get_tile(0, self.grid) # Null position of current state is determined
-        to_move = self.grid[null_position_intermediate_grid[0]][null_position_intermediate_grid[1]] # The number to move is determined
-        self.grid[null_position_grid[0]][null_position_grid[1]] = to_move # Place new number in null position
-        self.grid[null_position_intermediate_grid[0]][null_position_intermediate_grid[1]] = 0 # Place null in old position
-        if self.count % 50 == 0: # Print the grid all 50 recursions
+        self.heuristic = 10  # This is a dummy heuristic. It is needed to form an upper treshold
+        intermediate_grid = self.explore()  # The calculated next state is obtained.
+        null_position_intermediate_grid = self.get_tile(0,
+                                                        intermediate_grid)  # Null position of the next state is determined.
+        null_position_grid = self.get_tile(0, self.grid)  # Null position of current state is determined
+        to_move = self.grid[null_position_intermediate_grid[0]][
+            null_position_intermediate_grid[1]]  # The number to move is determined
+        self.grid[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
+        self.grid[null_position_intermediate_grid[0]][
+            null_position_intermediate_grid[1]] = 0  # Place null in old position
+        if self.count % 50 == 0:  # Print the grid all 50 recursions
             self.g.print_ascii_grid()
         self.count += 1
         print(self.count)
@@ -108,13 +110,16 @@ class Solution:
     ###
 
     def calculate_heuristic(self, to_move_coords, null_position):
-        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []} # Here, all the candidates are saved.
-        for coords in to_move_coords: # Possible candidates are checked
-            candidate = copy.deepcopy(self.grid) # A copy of the current state is generated
-            candidate[null_position[0]][null_position[1]] = candidate[coords[0]][coords[1]] # A test with the new state is initiated
-            candidate[coords[0]][coords[1]] = 0 # Null is inserted where a the number was swapped
-            heuristic = self.count_misplaced_tiles(candidate) # Heuristic is calculated. How many tiles are in the new state misplaced?
-            candidates[heuristic].append(candidate) # The candidate is saved.
+        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [],
+                      9: []}  # Here, all the candidates are saved.
+        for coords in to_move_coords:  # Possible candidates are checked
+            candidate = copy.deepcopy(self.grid)  # A copy of the current state is generated
+            candidate[null_position[0]][null_position[1]] = candidate[coords[0]][
+                coords[1]]  # A test with the new state is initiated
+            candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
+            heuristic = self.count_misplaced_tiles(
+                candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+            candidates[heuristic].append(candidate)  # The candidate is saved.
         return self.elect_next_state(candidates)
 
     ###
@@ -124,9 +129,11 @@ class Solution:
     ###
 
     def elect_next_state(self, candidates):
-        for heuristic in candidates.keys(): # Every heuristic is now checked for which is best
-            if len(candidates[heuristic]) != 0: # Only where a heurisic has been saved
-                for e in candidates[heuristic]: # Since the states are in a list, this list is iterated through
-                    if e not in self.search_path[heuristic]: # If the state has not been in the search path, it is the One!
-                        self.search_path[heuristic].append(e) # The state is inserted in the search path to avoid loops. It cannot be used again.
+        for heuristic in candidates.keys():  # Every heuristic is now checked for which is best
+            if len(candidates[heuristic]) != 0:  # Only where a heurisic has been saved
+                for e in candidates[heuristic]:  # Since the states are in a list, this list is iterated through
+                    if e not in self.search_path[
+                        heuristic]:  # If the state has not been in the search path, it is the One!
+                        self.search_path[heuristic].append(
+                            e)  # The state is inserted in the search path to avoid loops. It cannot be used again.
                         return e
