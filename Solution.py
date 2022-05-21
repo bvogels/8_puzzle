@@ -94,16 +94,25 @@ class Solution:
                 return self.calculate_heuristic(to_move_coords, null_position)
 
     def calculate_heuristic(self, to_move_coords, null_position):
-        elective = []
+        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
         for coords in to_move_coords:
             candidate = copy.deepcopy(self.grid)
             candidate[null_position[0]][null_position[1]] = candidate[coords[0]][coords[1]]
             candidate[coords[0]][coords[1]] = 0
             heuristic = self.count_misplaced_tiles(candidate)
-            if heuristic < self.heuristic: # worse heuristic is necessary if all other path are used
-                self.heuristic = heuristic
-                if candidate not in self.search_path[self.heuristic]:
-                    elective = copy.deepcopy(candidate)
-        x = self.search_path.get(self.heuristic)
-        x.append(elective)
-        return elective
+            candidates[heuristic] += candidate
+        self.elect_next_state(candidates)
+
+        #     if heuristic < self.heuristic: # worse heuristic is necessary if all other path are used
+        #         self.heuristic = heuristic
+        #         if candidate not in self.search_path[self.heuristic]:
+        #             elective = copy.deepcopy(candidate)
+        # x = self.search_path.get(self.heuristic)
+        # x.append(elective)
+        # return elective
+
+    def elect_next_state(self, candidates):
+        for heuristic in candidates.keys():
+            if len(candidates[heuristic]) != 0:
+                print()
+        pass
