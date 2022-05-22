@@ -10,6 +10,7 @@ class Solution:
     count = 0
     heuristic = 10
     search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
+    paths = 0
 
     def get_tile(self, tile, search_grid):
         null_coords = []
@@ -43,6 +44,7 @@ class Solution:
             self.count += 1
             print(self.count)
         self.g.print_ascii_grid()
+        print(self.paths, "paths expanded.")
         return True
 
     ###
@@ -127,9 +129,13 @@ class Solution:
 
     def elect_next_state(self, candidates):
         for heuristic in candidates.keys():  # Every heuristic is now checked for which is best
-            if len(candidates[heuristic]) != 0 and heuristic <= self.heuristic:  # Only where a heurisic has been saved
+            if len(candidates[heuristic]) != 0:# and heuristic <= self.heuristic:  # Only where a heurisic has been saved
                 for e in candidates[heuristic]:  # Since the states are in a list, this list is iterated through
                     if e not in self.search_path[heuristic]:  # If the state has not been in the search path, it is the One!
                         self.search_path[heuristic].append(e)  # The state is inserted in the search path to avoid loops. It cannot be used again.
+                        if self.heuristic < heuristic:
+                            print("Path ends here.")
+                            self.paths += 1
                         self.heuristic = heuristic
+                        print("Heuristic is now: ", self.heuristic)
                         return e
