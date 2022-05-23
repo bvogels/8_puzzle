@@ -38,10 +38,8 @@ class Grid:
     def testgrid9(self):
         self.grid = [[2, 1, 7], [8, 3, 6], [5, 4, 0]]
 
-    def create_grid(self):
+    def create_grid(self, numbers):
         r, e = 0, 0
-        numbers = [n for n in range(0, 9)]
-        random.shuffle(numbers)
         while r < 3:
             c = 0
             while c < 3:
@@ -50,6 +48,25 @@ class Grid:
                 e += 1
             r += 1
         print(self.grid)
+
+    def create_random_grid(self):
+        numbers = [n for n in range(0, 9)]
+        random.shuffle(numbers)
+        self.create_grid(numbers)
+
+    def create_custom_grid(self, numbers, frontend):
+        if len(numbers) == 9:
+            numbers = [int(n) for n in list(numbers)]
+            if len(set(numbers)) == len(numbers) and min(numbers) == 0 and max(numbers) == 8:
+                self.create_grid(numbers)
+            else:
+                print(frontend.messages(3, None))
+                frontend.main_menu()
+        else:
+            print(frontend.messages(4, None))
+        frontend.main_menu()
+
+
 
     ###
     ###### Check if the puzzle is even solvable.
