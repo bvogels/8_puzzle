@@ -7,6 +7,7 @@ class Frontend:
         print("Choose an option:")
         print("(1) Solve random puzzle")
         print("(2) Enter own puzzle")
+        print("(3) Choose pre-defined puzzle")
         choice = int(input("Choice: "))
         return choice
 
@@ -17,6 +18,13 @@ class Frontend:
             3: "Not a valid grid.",
             4: "Grid to short/long",
             5: "Path ends here.",
-            6: "Heuristic is now"
+            6: "Heuristic is now",
+            7: "Loop encountered in valid grid while solving."
         }
         return m[message]
+
+    def statistics(self, worst_heuristic, paths, nodes):
+        print("+++++ Some statistics of the current grid +++++")
+        print("Worst heuristic: ", worst_heuristic)
+        print("Paths explored: ", paths)
+        print("Nodes expanded: ", nodes)

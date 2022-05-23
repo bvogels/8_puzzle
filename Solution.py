@@ -138,4 +138,6 @@ class Solution:
                             self.paths += 1
                         self.heuristic = heuristic
                         print("Heuristic is now: ", self.heuristic)
+                        if len(e) == 0:
+                            print("Loop")
                         return e

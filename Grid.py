@@ -47,7 +47,7 @@ class Grid:
                 c += 1
                 e += 1
             r += 1
-        print(self.grid)
+        #print(self.grid)
 
     def create_random_grid(self):
         numbers = [n for n in range(0, 9)]
@@ -59,14 +59,13 @@ class Grid:
             numbers = [int(n) for n in list(numbers)]
             if len(set(numbers)) == len(numbers) and min(numbers) == 0 and max(numbers) == 8:
                 self.create_grid(numbers)
+                return True
             else:
                 print(frontend.messages(3, None))
-                frontend.main_menu()
+                return False
         else:
             print(frontend.messages(4, None))
-        frontend.main_menu()
-
-
+            return False
 
     ###
     ###### Check if the puzzle is even solvable.
