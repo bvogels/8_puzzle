@@ -34,7 +34,6 @@ if __name__ == '__main__':
                 g.check_validity()
                 g.print_ascii_grid()
             start_solution(g, f)
-            quit()
         elif choice == 2:
             print(f.messages(1, None))
             numbers = input("Grid: ")
@@ -49,3 +48,5 @@ if __name__ == '__main__':
             g = Grid()
             g.grid = grid
             start_solution(g, f)
+        elif choice == 4:
+            quit()

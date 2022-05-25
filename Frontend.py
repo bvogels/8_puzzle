@@ -8,6 +8,7 @@ class Frontend:
         print("(1) Solve random puzzle")
         print("(2) Enter own puzzle")
         print("(3) Choose pre-defined puzzle")
+        print("(4) Quit")
         choice = int(input("Choice: "))
         return choice
 
