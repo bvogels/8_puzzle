@@ -23,8 +23,9 @@ class Frontend:
         }
         return m[message]
 
-    def statistics(self, worst_heuristic, paths, nodes):
+    def statistics(self, paths, nodes, branching_level):
         print("+++++ Some statistics of the current grid +++++")
-        print("Worst heuristic: ", worst_heuristic)
-        print("Paths explored: ", paths)
+        #print("Worst heuristic: ", worst_heuristic)
+        #print("Paths explored: ", paths)
         print("Nodes expanded: ", nodes)
+        print("Branching level: ", branching_level)
