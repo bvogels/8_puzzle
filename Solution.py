@@ -43,9 +43,11 @@ class Solution:
             self.heuristic = self.count_misplaced_tiles(self.grid)
             self.reconfigure_grid(self.explore())  # The calculated next state is obtained.
             self.count += 1
+            print("Count: ", self.count, "; Grid: ", self.grid, "; Heuristic: ", self.heuristic)
         self.g.print_ascii_grid()
-        for config, step in enumerate(range(self.tiles.qsize())):
-            print(step, self.tiles.get())
+        print("Solved")
+        #for config, step in enumerate(range(self.tiles.qsize())):
+        #    print(step, self.tiles.get())
         return True
 
     ###
@@ -66,7 +68,8 @@ class Solution:
     ###
 
     def reconfigure_grid(self, intermediate_grid):
-        null_position_intermediate_grid = self.get_tile(0, intermediate_grid)  # Null position of the next state is determined.
+        null_position_intermediate_grid = self.get_tile(0,
+                                                        intermediate_grid)  # Null position of the next state is determined.
         null_position_grid = self.get_tile(0, self.grid)  # Null position of current state is determined
         to_move = self.grid[null_position_intermediate_grid[0]][
             null_position_intermediate_grid[1]]  # The number to move is determined
@@ -136,12 +139,15 @@ class Solution:
     ###
 
     def calculate_heuristic(self, to_move_coords, null_position):
-        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: []}  # Here, all the candidates are saved.
+        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
+                      8: []}  # Here, all the candidates are saved.
         for coords in to_move_coords:  # Possible candidates are checked
             candidate = copy.deepcopy(self.grid)  # A copy of the current state is generated
-            candidate[null_position[0]][null_position[1]] = candidate[coords[0]][coords[1]]  # A test with the new state is initiated
+            candidate[null_position[0]][null_position[1]] = candidate[coords[0]][
+                coords[1]]  # A test with the new state is initiated
             candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
-            heuristic = self.count_misplaced_tiles(candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+            heuristic = self.count_misplaced_tiles(
+                candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
             candidates[heuristic].append(candidate)  # The candidate is saved.
         return self.elect_next_state(candidates)
 
@@ -153,7 +159,7 @@ class Solution:
 
     def elect_next_state(self, candidates):
         for heuristic in candidates.keys():
-            if candidates[heuristic] != 0: # and heuristic <= self.heuristic:
+            if candidates[heuristic] != 0:  # and heuristic <= self.heuristic:
                 for e in candidates[heuristic]:
                     if e not in self.search_path[heuristic]:
                         self.search_path[heuristic].append(e)
@@ -162,5 +168,5 @@ class Solution:
                         self.grid = e
                         return self.grid
         self.level -= 1
-        self.grid = self.tiles.get()
-        return self.grid
+        e = self.tiles.get()
+        return self.tiles.get()
