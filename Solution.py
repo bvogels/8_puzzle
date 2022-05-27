@@ -44,7 +44,7 @@ class Solution:
             self.reconfigure_grid(self.explore())  # The calculated next state is obtained.
             self.count += 1
             print("Count: ", self.count, "; Grid: ", self.grid, "; Heuristic: ", self.heuristic)
-        self.g.print_ascii_grid()
+        #self.g.print_ascii_grid()
         print("Solved")
         #for config, step in enumerate(range(self.tiles.qsize())):
         #    print(step, self.tiles.get())
@@ -159,14 +159,17 @@ class Solution:
 
     def elect_next_state(self, candidates):
         for heuristic in candidates.keys():
-            if candidates[heuristic] != 0:  # and heuristic <= self.heuristic:
-                for e in candidates[heuristic]:
-                    if e not in self.search_path[heuristic]:
-                        self.search_path[heuristic].append(e)
-                        self.tiles.put(e)
+            if len(candidates[heuristic]) != 0:# and heuristic <= self.heuristic:
+                for candidate in candidates[heuristic]:
+                    if candidate not in self.search_path[heuristic]:
+                        self.search_path[heuristic].append(candidate)
+                        self.tiles.put(candidate)
                         self.level += 1
-                        self.grid = e
+                        self.grid = candidate
                         return self.grid
         self.level -= 1
-        e = self.tiles.get()
+        #e = self.tiles.get()
+        print("Grid removed")
+        print("Queue size: ", self.tiles.qsize())
+
         return self.tiles.get()
