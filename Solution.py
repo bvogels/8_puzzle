@@ -1,5 +1,6 @@
 import copy
 import queue
+import math
 
 
 class Solution:
@@ -94,6 +95,19 @@ class Solution:
         return misplaced_tiles
 
     ###
+    ##### Manhattan Distance
+    #######
+    ##### The sum of the vertical and horizontal distance from the blocks to the goal position
+    def manhattan_distance(grid): ## initial state = grid?
+        initial_config = grid
+        man_dist = 0
+        for i, item in enumerate(initial_config):
+            prev_row, prev_col = int(i/3), i%3
+            goal_row, goal_col = int(item/3), item%3
+            man_dist += abs(prev_row - goal_row) + abs(prev_col - goal_col)
+        return man_dist
+        
+    ###
     ###### Explores the vicinity around the null position
     #########
     ######
@@ -171,5 +185,4 @@ class Solution:
         #e = self.tiles.get()
         print("Grid removed")
         print("Queue size: ", self.tiles.qsize())
-
         return self.tiles.get()
