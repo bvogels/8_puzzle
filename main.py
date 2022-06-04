@@ -3,10 +3,10 @@ from Grid import Grid
 from Solution import Solution
 
 
-def start_solution(grid, frontend):
-    s = Solution(grid)
+def start_solution(grid, heuristic_choice):
+    s = Solution(grid, heuristic_choice)
     s.solve_puzzle()
-    frontend.statistics(max(s.search_path.keys()), s.count, s.level)
+    Frontend().statistics(max(s.search_path.keys()), s.count, s.level)
 
 
 grids = {
@@ -25,7 +25,7 @@ grids = {
 if __name__ == '__main__':
     f = Frontend()
     while True:
-        choice = f.main_menu()
+        choice = Frontend().main_menu()
         if choice == 1:
             g = Grid()
             g.create_random_grid()
@@ -33,13 +33,15 @@ if __name__ == '__main__':
                 g.create_random_grid()
                 g.check_validity()
                 g.print_ascii_grid()
-            start_solution(g, f)
+            heuristic_choice = Frontend().choose_heuristic()
+            start_solution(g, heuristic_choice)
         elif choice == 2:
-            print(f.messages(1, None))
+            print(Frontend().messages(1, None))
             numbers = input("Grid: ")
             g = Grid()
             if g.create_custom_grid(numbers, f) is True:
-                start_solution(g, f)
+                heuristic_choice = Frontend().choose_heuristic()
+                start_solution(g, heuristic_choice)
         elif choice == 3:
             print("List of puzzles:")
             for index, puzzle in enumerate(grids.values()):
@@ -47,6 +49,7 @@ if __name__ == '__main__':
             grid = grids[int(input("Choose puzzle: "))]
             g = Grid()
             g.grid = grid
-            start_solution(g, f)
+            heuristic_choice = Frontend().choose_heuristic()
+            start_solution(g, heuristic_choice)
         elif choice == 4:
             quit()

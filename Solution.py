@@ -4,8 +4,9 @@ import math
 
 
 class Solution:
-    def __init__(self, grid):
+    def __init__(self, grid, heuristic_choice):
         self.grid = grid.grid  # The actual grid
+        self.heuristic_choice = heuristic_choice
         self.g = grid  # The grid object. Only used for printing the grid, e. g. having access to the grid functions.
 
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
@@ -41,13 +42,16 @@ class Solution:
         self.search_path[self.count_misplaced_tiles(self.grid)].append(self.grid)
         while self.grid != self.default_goal_state:
             self.grid = self.peek()
-            self.heuristic = self.count_misplaced_tiles(self.grid)
+            if self.heuristic_choice == 1:
+                self.heuristic = self.count_misplaced_tiles(self.grid)
+            elif self.heuristic_choice == 2:
+                self.heuristic = self.calculate_manhattan_distance(self.grid)
             self.reconfigure_grid(self.explore())  # The calculated next state is obtained.
             self.count += 1
             print("Count: ", self.count, "; Grid: ", self.grid, "; Heuristic: ", self.heuristic)
-        #self.g.print_ascii_grid()
+        # self.g.print_ascii_grid()
         print("Solved")
-        #for config, step in enumerate(range(self.tiles.qsize())):
+        # for config, step in enumerate(range(self.tiles.qsize())):
         #    print(step, self.tiles.get())
         return True
 
@@ -87,11 +91,11 @@ class Solution:
     def count_misplaced_tiles(self, grid):
         misplaced_tiles = 0
         for t, g in zip(grid, self.default_goal_state):
-            row = 0
-            while row < 3:
-                if t[row] != g[row] and t[row] != 0:
+            tile = 0
+            while tile < 3:
+                if t[tile] != g[tile] and t[tile] != 0:
                     misplaced_tiles += 1
-                row += 1
+                tile += 1
         return misplaced_tiles
 
     ###
@@ -100,15 +104,30 @@ class Solution:
     #########
     ######
     ###
-    def manhattan_distance(grid): ## initial state = grid?
+    def alternative_manhattan_distance(self, grid):  ## initial state = grid?
         initial_config = grid
         man_dist = 0
         for i, item in enumerate(initial_config):
-            prev_row, prev_col = int(i/3), i%3      ## previous position
-            goal_row, goal_col = int(item/3), item%3        ## goal position
+            prev_row, prev_col = int(i / 3), i % 3  ## previous position
+            goal_row, goal_col = int(item / 3), item % 3  ## goal position
             man_dist += abs(prev_row - goal_row) + abs(prev_col - goal_col)
         return man_dist
-        
+
+    def calculate_manhattan_distance(self, grid):
+        manhattan_distance = 0
+        for t, g in zip(grid, self.default_goal_state):
+            tile = 0
+            while tile < 3:
+                if t[tile] != g[tile] and t[tile] != 0:
+
+
+        for tile in grid:
+            for col in tile:
+                if grid[tile][col] != self.default_goal_state[tile][col]:
+                    target_destination = self.get_tile(grid[tile][col], self.default_goal_state)
+                    manhattan_distance += abs(grid.index(tile) - target_destination[0]) + abs(grid.index(col) - target_destination[1])
+        return manhattan_distance
+
     ###
     ###### Explores the vicinity around the null position
     #########
@@ -162,8 +181,11 @@ class Solution:
             candidate[null_position[0]][null_position[1]] = candidate[coords[0]][
                 coords[1]]  # A test with the new state is initiated
             candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
-            heuristic = self.count_misplaced_tiles(
-                candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+            if self.heuristic_choice == 1:
+                heuristic = self.count_misplaced_tiles(
+                    candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+            elif self.heuristic_choice == 2:
+                heuristic = self.calculate_manhattan_distance(candidate)
             candidates[heuristic].append(candidate)  # The candidate is saved.
         return self.elect_next_state(candidates)
 
@@ -175,7 +197,7 @@ class Solution:
 
     def elect_next_state(self, candidates):
         for heuristic in candidates.keys():
-            if len(candidates[heuristic]) != 0:# and heuristic <= self.heuristic:
+            if len(candidates[heuristic]) != 0:  # and heuristic <= self.heuristic:
                 for candidate in candidates[heuristic]:
                     if candidate not in self.search_path[heuristic]:
                         self.search_path[heuristic].append(candidate)
@@ -184,7 +206,7 @@ class Solution:
                         self.grid = candidate
                         return self.grid
         self.level -= 1
-        #e = self.tiles.get()
+        # e = self.tiles.get()
         print("Grid removed")
         print("Queue size: ", self.tiles.qsize())
         return self.tiles.get()

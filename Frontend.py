@@ -24,6 +24,13 @@ class Frontend:
         }
         return m[message]
 
+    def choose_heuristic(self):
+        print("Choose heuristic:")
+        print("(1) Misplaced tiles")
+        print("(2) Manhattan distance")
+        heuristic = int(input("Choice: "))
+        return heuristic
+
     def statistics(self, paths, nodes, branching_level):
         print("+++++ Some statistics of the current grid +++++")
         #print("Worst heuristic: ", worst_heuristic)
