@@ -12,7 +12,8 @@ class Solution:
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
     heuristic = 10
-    search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
+    search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
+                      8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: []  }
     level = 0
     tiles = queue.LifoQueue()
 
@@ -98,6 +99,22 @@ class Solution:
                 tile += 1
         return misplaced_tiles
 
+    def heuristic_method(self, grid):
+        heuristic = 0
+        for row in zip(grid, self.default_goal_state):
+            for col in zip(row[0], row[1]):
+                if col[0] != col[1] and col[0] != 0:
+                    if self.heuristic_choice == 1: # misplaced tiles
+                        heuristic += 1
+                    if self.heuristic_choice == 2: # manhattan distance
+                        source_position = self.get_tile(col[0], grid)
+                        target_position = self.get_tile(col[0], self.default_goal_state)
+                        heuristic += abs(source_position[0] - target_position[0]) + abs(
+                            source_position[1] - target_position[1])
+        return heuristic
+
+
+
     ###
     ###### Manhattan Distance
     ###### The sum of the vertical and horizontal distance from the blocks to the goal position
@@ -115,17 +132,12 @@ class Solution:
 
     def calculate_manhattan_distance(self, grid):
         manhattan_distance = 0
-        for t, g in zip(grid, self.default_goal_state):
-            tile = 0
-            while tile < 3:
-                if t[tile] != g[tile] and t[tile] != 0:
-
-
-        for tile in grid:
-            for col in tile:
-                if grid[tile][col] != self.default_goal_state[tile][col]:
-                    target_destination = self.get_tile(grid[tile][col], self.default_goal_state)
-                    manhattan_distance += abs(grid.index(tile) - target_destination[0]) + abs(grid.index(col) - target_destination[1])
+        for row in zip(grid, self.default_goal_state):
+            for col in zip(row[0], row[1]):
+                if col[0] != col[1] and col[0] != 0:
+                    source_position = self.get_tile(col[0], grid)
+                    target_position = self.get_tile(col[0], self.default_goal_state)
+                    manhattan_distance += abs(source_position[0] - target_position[0]) + abs(source_position[1] - target_position[1])
         return manhattan_distance
 
     ###
@@ -174,19 +186,17 @@ class Solution:
     ###
 
     def calculate_heuristic(self, to_move_coords, null_position):
-        candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
-                      8: []}  # Here, all the candidates are saved.
+        candidates = {}  # Here, all the candidates are saved.
         for coords in to_move_coords:  # Possible candidates are checked
             candidate = copy.deepcopy(self.grid)  # A copy of the current state is generated
             candidate[null_position[0]][null_position[1]] = candidate[coords[0]][
                 coords[1]]  # A test with the new state is initiated
             candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
-            if self.heuristic_choice == 1:
-                heuristic = self.count_misplaced_tiles(
-                    candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
-            elif self.heuristic_choice == 2:
-                heuristic = self.calculate_manhattan_distance(candidate)
-            candidates[heuristic].append(candidate)  # The candidate is saved.
+            heuristic = self.heuristic_method(candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+            if heuristic not in candidates:
+                candidates[heuristic] = [candidate]
+            else:
+                candidates[heuristic].append(candidate)  # The candidate is saved.
         return self.elect_next_state(candidates)
 
     ###
