@@ -113,33 +113,6 @@ class Solution:
                             source_position[1] - target_position[1])
         return heuristic
 
-
-
-    ###
-    ###### Manhattan Distance
-    ###### The sum of the vertical and horizontal distance from the blocks to the goal position
-    #########
-    ######
-    ###
-    def alternative_manhattan_distance(self, grid):  ## initial state = grid?
-        initial_config = grid
-        man_dist = 0
-        for i, item in enumerate(initial_config):
-            prev_row, prev_col = int(i / 3), i % 3  ## previous position
-            goal_row, goal_col = int(item / 3), item % 3  ## goal position
-            man_dist += abs(prev_row - goal_row) + abs(prev_col - goal_col)
-        return man_dist
-
-    def calculate_manhattan_distance(self, grid):
-        manhattan_distance = 0
-        for row in zip(grid, self.default_goal_state):
-            for col in zip(row[0], row[1]):
-                if col[0] != col[1] and col[0] != 0:
-                    source_position = self.get_tile(col[0], grid)
-                    target_position = self.get_tile(col[0], self.default_goal_state)
-                    manhattan_distance += abs(source_position[0] - target_position[0]) + abs(source_position[1] - target_position[1])
-        return manhattan_distance
-
     ###
     ###### Explores the vicinity around the null position
     #########
