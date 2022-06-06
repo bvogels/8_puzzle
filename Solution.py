@@ -12,8 +12,7 @@ class Solution:
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
     heuristic = 10
-    search_path = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [],
-                   8: [], 9: [], 10: [], 11: [], 12: [], 13: [], 14: []}
+    search_path = {}
     level = 0
     tiles = queue.LifoQueue()
 
@@ -40,10 +39,10 @@ class Solution:
     def solve_puzzle(self):
         start_grid = copy.deepcopy(self.grid)
         self.tiles.put(start_grid)
-        self.search_path[self.count_misplaced_tiles(self.grid)].append(self.grid)
+        self.search_path[self.heuristic_method(self.grid)] = [self.grid]
         while self.grid != self.default_goal_state:
             self.grid = self.peek()
-            self.heuristic = self.heuristic_choice(self.grid)
+            self.heuristic = self.heuristic_method(self.grid)
             self.reconfigure_grid(self.explore())  # The calculated next state is obtained.
             self.count += 1
             print("Count: ", self.count, "; Grid: ", self.grid, "; Heuristic: ", self.heuristic)
@@ -81,20 +80,10 @@ class Solution:
             null_position_intermediate_grid[1]] = 0  # Place null in old position
 
     ###
-    ###### Counts the misplaced titles in order to calculate the heuristic.
+    ###### Calculate heuristic depending on the chosen methodology.
     #########
     ######
     ###
-
-    def count_misplaced_tiles(self, grid):
-        misplaced_tiles = 0
-        for t, g in zip(grid, self.default_goal_state):
-            tile = 0
-            while tile < 3:
-                if t[tile] != g[tile] and t[tile] != 0:
-                    misplaced_tiles += 1
-                tile += 1
-        return misplaced_tiles
 
     def heuristic_method(self, grid):
         heuristic = 0
@@ -179,6 +168,8 @@ class Solution:
     def elect_next_state(self, candidates):
         for heuristic in sorted(candidates):
             for candidate in candidates[heuristic]:
+                if heuristic not in self.search_path:
+                    self.search_path[heuristic] = []
                 if candidate not in self.search_path[heuristic]:
                     self.search_path[heuristic].append(candidate)
                     self.tiles.put(candidate)
