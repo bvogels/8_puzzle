@@ -176,7 +176,7 @@ class Solution:
     ###
 
     def elect_next_state(self, candidates):
-        #if min(candidates.keys()) <= self.heuristic:
+        # if min(candidates.keys()) <= self.heuristic:
         for heuristic in sorted(candidates):
             for candidate in candidates[heuristic]:
                 if heuristic not in self.search_path:
