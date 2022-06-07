@@ -11,7 +11,7 @@ class Solution:
 
     default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
-    heuristic = 10
+    heuristic = 100
     search_path = {}
     level = 0
     tiles = queue.LifoQueue()
@@ -37,15 +37,24 @@ class Solution:
     ###
 
     def solve_puzzle(self):
+        self.search_path.clear()
+        self.heuristic = 100
+        self.tiles.queue.clear()
         start_grid = copy.deepcopy(self.grid)
+        grid = copy.deepcopy(self.grid)
         self.tiles.put(start_grid)
-        self.search_path[self.heuristic_method(self.grid)] = [self.grid]
-        while self.grid != self.default_goal_state:
-            self.grid = self.peek()
-            self.heuristic = self.heuristic_method(self.grid)
-            self.reconfigure_grid(self.explore())  # The calculated next state is obtained.
+        self.search_path[self.heuristic_method(self.grid)] = [start_grid]
+        while grid != self.default_goal_state:
+            if self.tiles.qsize() != 0:
+                grid = self.peek()
+            else:
+                grid = copy.deepcopy(start_grid)
+            self.heuristic = self.heuristic_method(grid)
+            # self.explore(grid)
+            grid = copy.deepcopy(self.explore(grid))  # The calculated next state is obtained.
             self.count += 1
-            print("Count: ", self.count, "; Grid: ", self.grid, "; Heuristic: ", self.heuristic)
+            self.heuristic = self.heuristic_method(grid)
+            print("Count: ", self.count, "; Grid: ", grid, "; Heuristic: ", self.heuristic)
         # self.g.print_ascii_grid()
         print("Solved")
         # for config, step in enumerate(range(self.tiles.qsize())):
@@ -72,12 +81,13 @@ class Solution:
     def reconfigure_grid(self, intermediate_grid):
         null_position_intermediate_grid = self.get_tile(0,
                                                         intermediate_grid)  # Null position of the next state is determined.
-        null_position_grid = self.get_tile(0, self.grid)  # Null position of current state is determined
+        null_position_grid = self.get_tile(0, self.peek())  # Null position of current state is determined
         to_move = self.grid[null_position_intermediate_grid[0]][
             null_position_intermediate_grid[1]]  # The number to move is determined
-        self.grid[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
-        self.grid[null_position_intermediate_grid[0]][
+        self.peek()[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
+        self.peek()[null_position_intermediate_grid[0]][
             null_position_intermediate_grid[1]] = 0  # Place null in old position
+        return intermediate_grid
 
     ###
     ###### Calculate heuristic depending on the chosen methodology.
@@ -105,38 +115,38 @@ class Solution:
     ######
     ###
 
-    def explore(self):
-        null_position = self.get_tile(0, self.grid)
+    def explore(self, grid):
+        null_position = self.get_tile(0, grid)
         if null_position[0] == 0:
             if null_position[1] == 0:
                 to_move_coords = [[0, 1], [1, 0]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 1:
                 to_move_coords = [[0, 0], [0, 2], [1, 1]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 2:
                 to_move_coords = [[0, 1], [1, 2]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
         if null_position[0] == 1:
             if null_position[1] == 0:
                 to_move_coords = [[0, 0], [1, 1], [2, 0]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 1:
                 to_move_coords = [[0, 1], [1, 0], [1, 2], [2, 1]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 2:
                 to_move_coords = [[0, 2], [1, 1], [2, 2]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
         if null_position[0] == 2:
             if null_position[1] == 0:
                 to_move_coords = [[1, 0], [2, 1]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 1:
                 to_move_coords = [[2, 0], [1, 1], [2, 2]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
             elif null_position[1] == 2:
                 to_move_coords = [[2, 1], [1, 2]]
-                return self.calculate_heuristic(to_move_coords, null_position)
+                return self.calculate_heuristic(to_move_coords, null_position, grid)
 
     ###
     ###### Calculates the heuristic for the possible next states (misplaced tiles)
@@ -144,10 +154,10 @@ class Solution:
     ######
     ###
 
-    def calculate_heuristic(self, to_move_coords, null_position):
+    def calculate_heuristic(self, to_move_coords, null_position, grid):
         candidates = {}  # Here, all the candidates are saved.
         for coords in to_move_coords:  # Possible candidates are checked
-            candidate = copy.deepcopy(self.grid)  # A copy of the current state is generated
+            candidate = copy.deepcopy(grid)  # A copy of the current state is generated
             candidate[null_position[0]][null_position[1]] = candidate[coords[0]][
                 coords[1]]  # A test with the new state is initiated
             candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
@@ -166,6 +176,7 @@ class Solution:
     ###
 
     def elect_next_state(self, candidates):
+        #if min(candidates.keys()) <= self.heuristic:
         for heuristic in sorted(candidates):
             for candidate in candidates[heuristic]:
                 if heuristic not in self.search_path:
@@ -174,10 +185,9 @@ class Solution:
                     self.search_path[heuristic].append(candidate)
                     self.tiles.put(candidate)
                     self.level += 1
-                    self.grid = candidate
-                    return self.grid
+                    return candidate
         self.level -= 1
-        # e = self.tiles.get()
+        self.tiles.get()
         print("Grid removed")
         print("Queue size: ", self.tiles.qsize())
         return self.tiles.get()
