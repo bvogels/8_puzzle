@@ -1,20 +1,21 @@
 import copy
 import queue
-import math
+import time
 
 
 class Solution:
-    def __init__(self, grid, heuristic_choice):
+    def __init__(self, grid, heuristic_choice, goal_state):
         self.grid = grid.grid  # The actual grid
         self.heuristic_choice = heuristic_choice
+        self.goal_state = goal_state
         self.g = grid  # The grid object. Only used for printing the grid, e. g. having access to the grid functions.
 
-    default_goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     count = 0
     heuristic = 100
     search_path = {}
     level = 0
     tiles = queue.LifoQueue()
+    runtime = 0
 
     ###
     ###### Gets the coordinates of a given grid.
@@ -37,6 +38,7 @@ class Solution:
     ###
 
     def solve_puzzle(self):
+        start = time.time()
         self.search_path.clear()
         self.heuristic = 100
         self.tiles.queue.clear()
@@ -44,7 +46,7 @@ class Solution:
         grid = copy.deepcopy(self.grid)
         self.tiles.put(start_grid)
         self.search_path[self.heuristic_method(self.grid)] = [start_grid]
-        while grid != self.default_goal_state:
+        while grid != self.goal_state:
             if self.tiles.qsize() != 0:
                 grid = self.peek()
             else:
@@ -59,6 +61,8 @@ class Solution:
         print("Solved")
         # for config, step in enumerate(range(self.tiles.qsize())):
         #    print(step, self.tiles.get())
+        stop = time.time()
+        self.runtime = stop - start
         return True
 
     ###
@@ -97,14 +101,14 @@ class Solution:
 
     def heuristic_method(self, grid):
         heuristic = 0
-        for row in zip(grid, self.default_goal_state):
+        for row in zip(grid, self.goal_state):
             for col in zip(row[0], row[1]):
                 if col[0] != col[1] and col[0] != 0:
                     if self.heuristic_choice == 1:  # misplaced tiles
                         heuristic += 1
                     if self.heuristic_choice == 2:  # manhattan distance
                         source_position = self.get_tile(col[0], grid)
-                        target_position = self.get_tile(col[0], self.default_goal_state)
+                        target_position = self.get_tile(col[0], self.goal_state)
                         heuristic += abs(source_position[0] - target_position[0]) + abs(
                             source_position[1] - target_position[1])
         return heuristic

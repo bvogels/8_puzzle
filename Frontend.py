@@ -31,9 +31,19 @@ class Frontend:
         heuristic = int(input("Choice: "))
         return heuristic
 
-    def statistics(self, paths, nodes, branching_level):
+    def goal_state(self):
+        print("Choose or enter goal state:")
+        print("(1) Default goal state (0-1-2-3-4-5-6-7-8)")
+        print("(2) Random goal state")
+        print("(3) Pre-defined goal state")
+        print("(4) Enter own goal state")
+        gstate = int(input("Choice: "))
+        return gstate
+
+    def statistics(self, paths, nodes, branching_level, runtime):
         print("+++++ Some statistics of the current grid +++++")
         #print("Worst heuristic: ", worst_heuristic)
         #print("Paths explored: ", paths)
         print("Nodes expanded: ", nodes)
         print("Branching level: ", branching_level)
+        print("Runtime in miliseconds: ", runtime * 1000)

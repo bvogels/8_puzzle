@@ -1,9 +1,6 @@
 import random
 ###import matplotlib.pyplot as plt
-
-
-
-
+from Frontend import Frontend
 
 
 class Grid:
@@ -30,17 +27,17 @@ class Grid:
         random.shuffle(numbers)
         self.create_grid(numbers)
 
-    def create_custom_grid(self, numbers, frontend):
+    def create_custom_grid(self, numbers):
         if len(numbers) == 9:
             numbers = [int(n) for n in list(numbers)]
             if len(set(numbers)) == len(numbers) and min(numbers) == 0 and max(numbers) == 8:
                 self.create_grid(numbers)
                 return True
             else:
-                print(frontend.messages(3, None))
+                print(Frontend().messages(3, None))
                 return False
         else:
-            print(frontend.messages(4, None))
+            print(Frontend().messages(4, None))
             return False
 
     ###
