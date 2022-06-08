@@ -165,6 +165,7 @@ class Solution:
         # if min(candidates.keys()) <= self.heuristic:
         for heuristic in sorted(candidates):
             for candidate in candidates[heuristic]:
+                #if heuristic <= self.heuristic:
                 if heuristic not in self.search_path:
                     self.search_path[heuristic] = []
                 if candidate not in self.search_path[heuristic]:
@@ -173,7 +174,7 @@ class Solution:
                     self.level += 1
                     return candidate
         self.level -= 1
-        self.tiles.get()
+        #self.tiles.get()
         print("Grid removed")
         print("Queue size: ", self.tiles.qsize())
         return self.tiles.get()
