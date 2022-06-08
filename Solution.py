@@ -52,7 +52,6 @@ class Solution:
             else:
                 grid = copy.deepcopy(start_grid)
             self.heuristic = self.heuristic_method(grid)
-            # self.explore(grid)
             grid = copy.deepcopy(self.explore(grid))  # The calculated next state is obtained.
             self.count += 1
             self.heuristic = self.heuristic_method(grid)
@@ -75,23 +74,6 @@ class Solution:
         g = self.tiles.get()
         self.tiles.put(g)
         return g
-
-    ###
-    ###### Reconfigures the self.grid to become the new grid
-    #########
-    ######
-    ###
-
-    def reconfigure_grid(self, intermediate_grid):
-        null_position_intermediate_grid = self.get_tile(0,
-                                                        intermediate_grid)  # Null position of the next state is determined.
-        null_position_grid = self.get_tile(0, self.peek())  # Null position of current state is determined
-        to_move = self.grid[null_position_intermediate_grid[0]][
-            null_position_intermediate_grid[1]]  # The number to move is determined
-        self.peek()[null_position_grid[0]][null_position_grid[1]] = to_move  # Place new number in null position
-        self.peek()[null_position_intermediate_grid[0]][
-            null_position_intermediate_grid[1]] = 0  # Place null in old position
-        return intermediate_grid
 
     ###
     ###### Calculate heuristic depending on the chosen methodology.
