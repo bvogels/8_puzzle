@@ -28,6 +28,7 @@ class Frontend:
         print("Choose heuristic:")
         print("(1) Misplaced tiles")
         print("(2) Manhattan distance")
+        print("(3) Run both heuristics")
         heuristic = int(input("Choice: "))
         return heuristic
 
@@ -40,10 +41,17 @@ class Frontend:
         gstate = int(input("Choice: "))
         return gstate
 
-    def statistics(self, paths, nodes, branching_level, runtime):
-        print("+++++ Some statistics of the current grid +++++")
-        #print("Worst heuristic: ", worst_heuristic)
-        #print("Paths explored: ", paths)
-        print("Nodes expanded: ", nodes)
-        print("Branching level: ", branching_level)
-        print("Runtime in miliseconds: ", runtime * 1000)
+    def statistics(self, data):
+        print("++++++++++++++++ Some statistics of the current grid ++++++++++++++++")
+        print("Start grid ", data[0])
+        print("Goal grid  ", data[1])
+        print("---------------------------------------------------------------------")
+        print("Misplaced Tiles (Hamming)")
+        print("Expanded Nodes: ", data[2][1][1])
+        print("Elapsed Time ", int(data[2][1][0] * 1000), "ms")
+        print("Consumed Memory: ", data[2][1][2][1] / 1000, "MByte")
+        print("---------------------------------------------------------------------")
+        print("Manhattan Distance")
+        print("Expanded Nodes: ", data[2][2][1])
+        print("Elapsed Time ", int(data[2][2][0] * 1000), "ms")
+        print("Consumed Memory: ", data[2][2][2][1] / 1000, "MByte")

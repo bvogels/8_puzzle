@@ -3,6 +3,7 @@ import queue
 import time
 
 
+
 class Solution:
     def __init__(self, grid, heuristic_choice, goal_state):
         self.grid = grid  # The actual grid
@@ -38,7 +39,6 @@ class Solution:
     ###
 
     def solve_puzzle(self):
-        start = time.time()
         self.search_path.clear()
         self.heuristic = 100
         self.tiles.queue.clear()
@@ -55,13 +55,7 @@ class Solution:
             grid = copy.deepcopy(self.explore(grid))  # The calculated next state is obtained.
             self.count += 1
             self.heuristic = self.heuristic_method(grid)
-            print("Count: ", self.count, "; Grid: ", grid, "; Heuristic: ", self.heuristic)
-        # self.g.print_ascii_grid()
-        print("Solved")
-        # for config, step in enumerate(range(self.tiles.qsize())):
-        #    print(step, self.tiles.get())
-        stop = time.time()
-        self.runtime = stop - start
+            #print("Count: ", self.count, "; Grid: ", grid, "; Heuristic: ", self.heuristic)
         return True
 
     ###
@@ -174,7 +168,4 @@ class Solution:
                     self.level += 1
                     return candidate
         self.level -= 1
-        #self.tiles.get()
-        print("Grid removed")
-        print("Queue size: ", self.tiles.qsize())
         return self.tiles.get()

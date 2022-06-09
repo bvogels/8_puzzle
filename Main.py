@@ -1,12 +1,27 @@
+import time
+import tracemalloc
+
 from Frontend import Frontend
 from Grid import Grid
 from Solution import Solution
 
 
 def start_solution(grid, heuristic_choice, goal_state):
-    s = Solution(grid, heuristic_choice, goal_state)
-    s.solve_puzzle()
-    Frontend().statistics(max(s.search_path.keys()), s.count, s.level, s.runtime)
+    data = [grid, goal_state, {}]
+    h = {1: [1], 2: [2], 3: [1, 2]}
+    for heuristic in h[heuristic_choice]:
+        tracemalloc.start()
+        start = time.time()
+        s = Solution(grid, heuristic, goal_state)
+        s.solve_puzzle()
+        stop = time.time()
+        used_memory = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
+        data[2][heuristic] = [stop-start]
+        data[2][heuristic].append(s.count)
+        data[2][heuristic].append(used_memory)
+    Frontend().statistics(data)
+    return data
 
 
 def select_goal_state():
