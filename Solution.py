@@ -55,7 +55,7 @@ class Solution:
             grid = copy.deepcopy(self.explore(grid))  # The calculated next state is obtained.
             self.count += 1
             self.heuristic = self.heuristic_method(grid)
-            #print("Count: ", self.count, "; Grid: ", grid, "; Heuristic: ", self.heuristic)
+            print("Count: ", self.count, "; Grid: ", grid, "; Heuristic: ", self.heuristic)
         return True
 
     ###
