@@ -5,7 +5,7 @@ import time
 
 class Solution:
     def __init__(self, grid, heuristic_choice, goal_state):
-        self.grid = grid.grid  # The actual grid
+        self.grid = grid  # The actual grid
         self.heuristic_choice = heuristic_choice
         self.goal_state = goal_state
         self.g = grid  # The grid object. Only used for printing the grid, e. g. having access to the grid functions.
@@ -162,7 +162,7 @@ class Solution:
     ###
 
     def elect_next_state(self, candidates):
-        # if min(candidates.keys()) <= self.heuristic:
+        #if min(candidates.keys()) <= self.heuristic:
         for heuristic in sorted(candidates):
             for candidate in candidates[heuristic]:
                 #if heuristic <= self.heuristic:

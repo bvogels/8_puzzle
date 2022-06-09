@@ -4,7 +4,6 @@ from Frontend import Frontend
 
 
 class Grid:
-    grid = [[], [], []]
 
     ###
     ###### Create a 3x3 puzzle with the numbers 0 to 8
@@ -13,32 +12,35 @@ class Grid:
     ###
 
     def create_grid(self, numbers):
+        grid = [[], [], []]
         r, e = 0, 0
         while r < 3:
             c = 0
             while c < 3:
-                self.grid[r].append(numbers[e])
+                grid[r].append(numbers[e])
                 c += 1
                 e += 1
             r += 1
+        return grid
 
     def create_random_grid(self):
         numbers = [n for n in range(0, 9)]
         random.shuffle(numbers)
-        self.create_grid(numbers)
+        return self.create_grid(numbers)
 
-    def create_custom_grid(self, numbers):
+    def create_custom_grid(self):
+        print(Frontend().messages(1, None))
+        numbers = input("Grid: ")
         if len(numbers) == 9:
             numbers = [int(n) for n in list(numbers)]
             if len(set(numbers)) == len(numbers) and min(numbers) == 0 and max(numbers) == 8:
-                self.create_grid(numbers)
-                return True
+                return self.create_grid(numbers)
             else:
                 print(Frontend().messages(3, None))
-                return False
+                self.create_custom_grid()
         else:
             print(Frontend().messages(4, None))
-            return False
+            self.create_custom_grid()
 
     ###
     ###### Check if the puzzle is even solvable.
@@ -46,9 +48,9 @@ class Grid:
     ######
     ###
 
-    def check_validity(self):
+    def check_validity(self, grid):
         shifts = 0  # The number of tile shifts
-        flat_grid = sum(self.grid, [])  # flatten the grid -> This is only necessary no make coding less painful
+        flat_grid = sum(grid, [])  # flatten the grid -> This is only necessary no make coding less painful
         flat_grid.remove(0)  # Remove the 0 value
 
         # Traverse the grid to search for misplaced tiles.
@@ -67,13 +69,13 @@ class Grid:
     ######
     ###
 
-    def print_ascii_grid(self):
+    def print_ascii_grid(self, grid):
         print("+---" * 3 + "+")
-        print("|", self.grid[0][0], "|", self.grid[0][1], "|", self.grid[0][2], "|", )
+        print("|", grid[0][0], "|", grid[0][1], "|", grid[0][2], "|", )
         print("+---" * 3 + "+")
-        print("|", self.grid[1][0], "|", self.grid[1][1], "|", self.grid[1][2], "|", )
+        print("|", grid[1][0], "|", grid[1][1], "|", grid[1][2], "|", )
         print("+---" * 3 + "+")
-        print("|", self.grid[2][0], "|", self.grid[2][1], "|", self.grid[2][2], "|", )
+        print("|", grid[2][0], "|", grid[2][1], "|", grid[2][2], "|", )
         print("+---" * 3 + "+")
 
     ###

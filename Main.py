@@ -20,7 +20,7 @@ def select_goal_state():
     elif gstate == 3:
         goal_state_grid = select_predefined_puzzle()
     elif gstate == 4:
-        goal_state_grid = Grid().create_random_grid()
+        goal_state_grid = Grid().create_custom_grid()
     return goal_state_grid
 
 
@@ -40,35 +40,33 @@ def select_predefined_puzzle():
     print("List of available states:")
     for index, puzzle in enumerate(grids.values()):
         print(index + 1, ": ", puzzle)
-    grid = grids[int(input("Choose state: "))]
-    return grid
-
-#def custom_grid():
+    predefined_grid = grids[int(input("Choose state: "))]
+    return predefined_grid
 
 
 if __name__ == '__main__':
     while True:
         choice = Frontend().main_menu()
         if choice == 1:
-            g = Grid()
-            g.create_random_grid()
-            while g.check_validity() is False:
-                g.create_random_grid()
-                g.check_validity()
-                g.print_ascii_grid()
+            grid = Grid().create_random_grid()
+            while Grid().check_validity(grid) is False:
+                grid = Grid().create_random_grid()
+                Grid().check_validity(grid)
+                Grid().print_ascii_grid(grid)
             heuristic_choice = Frontend().choose_heuristic()
-            start_solution(g, heuristic_choice, select_goal_state())
+            start_solution(grid, heuristic_choice, select_goal_state())
         elif choice == 2:
-            print(Frontend().messages(1, None))
-            numbers = input("Grid: ")
-            g = Grid()
-            if g.create_custom_grid(numbers) is True:
-                heuristic_choice = Frontend().choose_heuristic()
-                start_solution(g, heuristic_choice, select_goal_state())
-        elif choice == 3:
-            g = Grid()
-            g.grid = select_predefined_puzzle()
+            grid = Grid().create_custom_grid()
+            while Grid().check_validity(grid) is False:
+                print(Frontend().messages(2, None))
+                grid = Grid().create_custom_grid()
+            Grid().print_ascii_grid(grid)
             heuristic_choice = Frontend().choose_heuristic()
-            start_solution(g, heuristic_choice, select_goal_state())
+            start_solution(grid, heuristic_choice, select_goal_state())
+        elif choice == 3:
+            grid = select_predefined_puzzle()
+            Grid().print_ascii_grid(grid)
+            heuristic_choice = Frontend().choose_heuristic()
+            start_solution(grid, heuristic_choice, select_goal_state())
         elif choice == 4:
             quit()
