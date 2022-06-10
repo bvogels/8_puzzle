@@ -7,7 +7,6 @@ from Solution import Solution
 
 
 def start_solution(grid, heuristic_choice, goal_state):
-    #start, stop = 0, 0
     data = [grid, goal_state, {}]
     h = {1: [1], 2: [2], 3: [1, 2]}
     for heuristic in h[heuristic_choice]:
@@ -19,12 +18,12 @@ def start_solution(grid, heuristic_choice, goal_state):
         used_memory = tracemalloc.get_traced_memory()
         tracemalloc.stop()
         data[2][heuristic] = [stop-start]
-        data[2][heuristic].append(s.count)
+        data[2][heuristic].append(s.visited_nodes)
         data[2][heuristic].append(used_memory)
     if heuristic_choice == 3:
         Frontend().statistics(data)
     else:
-        print("Expanded nodes ", s.count)
+        print("Expanded nodes ", s.visited_nodes)
         print("Elapsed time: ", int((stop-start) * 1000), "ms")
         print("Consumed memory: ", used_memory[0] / 1000, "MByte")
     return data
@@ -66,6 +65,8 @@ def select_predefined_puzzle():
 
 
 if __name__ == '__main__':
+
+    # The choices as determined in the Frontend class are offered to the user.
     while True:
         choice = Frontend().main_menu()
         if choice == 1:
