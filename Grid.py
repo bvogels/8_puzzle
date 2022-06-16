@@ -1,3 +1,4 @@
+import copy
 import random
 ###import matplotlib.pyplot as plt
 from Frontend import Frontend
@@ -26,11 +27,12 @@ class Grid:
     def create_random_grid(self):
         numbers = [n for n in range(0, 9)]
         random.shuffle(numbers)
+        while self.check_validity(numbers) is False:
+            numbers = [n for n in range(0, 9)]
+            random.shuffle(numbers)
         grid = self.create_grid(numbers)
-        if self.check_validity(grid) == True:
-            return grid
-        else:
-            self.create_random_grid()
+        return grid
+
 
     def create_custom_grid(self):
         print(Frontend().messages(1, None))
@@ -38,7 +40,11 @@ class Grid:
         if len(numbers) == 9:
             numbers = [int(n) for n in list(numbers)]
             if len(set(numbers)) == len(numbers) and min(numbers) == 0 and max(numbers) == 8:
-                return self.create_grid(numbers)
+                if self.check_validity(numbers):
+                    return self.create_grid(numbers)
+                else:
+                    print(Frontend().messages(2, None))
+                    self.create_custom_grid()
             else:
                 print(Frontend().messages(3, None))
                 self.create_custom_grid()
@@ -52,15 +58,14 @@ class Grid:
     ######
     ###
 
-    def check_validity(self, grid):
+    def check_validity(self, flat_grid):
         shifts = 0  # The number of tile shifts
-        flat_grid = sum(grid, [])  # flatten the grid -> This is only necessary no make coding less painful
-        flat_grid.remove(0)  # Remove the 0 value
+        #flat_grid.remove(0)  # Remove the 0 value
 
         # Traverse the grid to search for misplaced tiles.
         for e in flat_grid:
             for n in range(flat_grid.index(e), e):
-                if e > flat_grid[n]:
+                if e > flat_grid[n]:# and flat_grid[n] != 0 and flat_grid[e] != 0:
                     shifts += 1
         if shifts % 2 == 0:
             return True

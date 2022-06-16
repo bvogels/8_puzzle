@@ -76,9 +76,6 @@ if __name__ == '__main__':
             start_solution(grid, heuristic_choice, select_goal_state())
         elif choice == 2:
             grid = Grid().create_custom_grid()
-            while Grid().check_validity(grid) is False:
-                print(Frontend().messages(2, None))
-                grid = Grid().create_custom_grid()
             Grid().print_ascii_grid(grid)
             heuristic_choice = Frontend().choose_heuristic()
             start_solution(grid, heuristic_choice, select_goal_state())

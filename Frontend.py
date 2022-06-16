@@ -26,7 +26,7 @@ class Frontend:
 
     def choose_heuristic(self):
         print("Choose heuristic:")
-        print("(1) Misplaced tiles")
+        print("(1) Misplaced tiles (Hamming)")
         print("(2) Manhattan distance")
         print("(3) Run both heuristics")
         heuristic = int(input("Choice: "))
@@ -48,10 +48,10 @@ class Frontend:
         print("---------------------------------------------------------------------")
         print("Misplaced Tiles (Hamming)")
         print("Expanded Nodes: ", data[2][1][1])
-        print("Elapsed Time ", int(data[2][1][0] * 1000), "ms")
-        print("Consumed Memory: ", data[2][1][2][1] / 1000, "MByte")
+        print("Elapsed Time: ", int(data[2][1][0] * 1000), "ms")
+        print("Consumed Memory: ", data[2][1][2][1] / 1000, "Memory units")
         print("---------------------------------------------------------------------")
         print("Manhattan Distance")
         print("Expanded Nodes: ", data[2][2][1])
-        print("Elapsed Time ", int(data[2][2][0] * 1000), "ms")
-        print("Consumed Memory: ", data[2][2][2][1] / 1000, "MByte")
+        print("Elapsed Time: ", int(data[2][2][0] * 1000), "ms")
+        print("Consumed Memory: ", data[2][2][2][1] / 1000, "Memory units")

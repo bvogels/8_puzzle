@@ -100,7 +100,7 @@ class Solution:
                 coords[1]]  # A test with the new state is initiated
             candidate[coords[0]][coords[1]] = 0  # Null is inserted where a the number was swapped
             heuristic = self.heuristic_method(
-                candidate)  # Heuristic is calculated. How many tiles are in the new state misplaced?
+                candidate) # + self.tiles.qsize() # Heuristic is calculated. How many tiles are in the new state misplaced?
             if heuristic not in candidates:
                 candidates[heuristic] = [candidate]
             else:
