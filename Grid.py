@@ -26,7 +26,11 @@ class Grid:
     def create_random_grid(self):
         numbers = [n for n in range(0, 9)]
         random.shuffle(numbers)
-        return self.create_grid(numbers)
+        grid = self.create_grid(numbers)
+        if self.check_validity(grid) == True:
+            return grid
+        else:
+            self.create_random_grid()
 
     def create_custom_grid(self):
         print(Frontend().messages(1, None))

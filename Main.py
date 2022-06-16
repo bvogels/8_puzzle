@@ -71,10 +71,7 @@ if __name__ == '__main__':
         choice = Frontend().main_menu()
         if choice == 1:
             grid = Grid().create_random_grid()
-            while Grid().check_validity(grid) is False:
-                grid = Grid().create_random_grid()
-                Grid().check_validity(grid)
-                Grid().print_ascii_grid(grid)
+            Grid().print_ascii_grid(grid)
             heuristic_choice = Frontend().choose_heuristic()
             start_solution(grid, heuristic_choice, select_goal_state())
         elif choice == 2:
